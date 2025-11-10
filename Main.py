@@ -7,23 +7,20 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 
-st.set_page_config(page_title="Skyline Banking", page_icon="💻", layout="wide")
+st.set_page_config(page_title="Skyline Banking", page_icon=":cloud:", layout="wide")
 
-# --- USER CREDENTIALS ---
+# User Credentials 
 User_Credentials = {
     "AlishaSyed": "Abcd123!",
-    "Kripal": "Efgh456!",
-    "Shayne": "Ijkl789!"
 }
 
-# --- SESSION STATE ---
+# Checking if logged in and what user
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 if "username" not in st.session_state:
     st.session_state["username"] = ""
 
-
-# --- LOGIN PAGE ---
+# Immediate log in page 
 def login_page():
     st.title("Skyline Banking ☁️")
     st.text("Where everyday banking is made easier.")
@@ -45,7 +42,7 @@ def login_page():
             st.error("Invalid username or password ❌")
 
 
-# --- TRANSACTIONS SECTION ---
+# Transactions list 
 def init_transactions_simple(username):
     key = f"tx_simple_{username}"
     if key not in st.session_state:
@@ -64,8 +61,7 @@ def transactions_simple_section(username):
     rows = st.session_state[f"tx_simple_{username}"]
     st.table(rows)
 
-
-# --- NVDA LINE CHART ---
+# Stock: NVDA line chart 
 def nvda_line_chart():
     st.subheader("📈 NVDA Stock Trend")
 
@@ -84,7 +80,7 @@ def nvda_line_chart():
         st.error(f"Error fetching stock data: {e}")
 
 
-# --- DASHBOARD ---
+#Main dashboard 
 def dashboard():
     st.title(f"🏠 Welcome Back, {st.session_state['username']}!")
     if st.button("Logout"):
@@ -113,10 +109,10 @@ def transactions_simple_section(username):
     init_transactions_simple(username)
     rows = st.session_state[f"tx_simple_{username}"]
     
-    st.subheader("💳 Recent Transactions")
+    st.subheader("Recent Transactions")
     st.table(rows)
 
-    # --- Calculate total spending ---
+   # Calculates monthly spending to then produce an avg ammount (used AI in order to create this snippet of code)
     monthly_avg = 500  # Example average spending
     total_spent = sum(float(tx["Amount"].replace("$","").replace(",","")) 
                       for tx in rows if tx["Amount"].startswith("-"))
@@ -125,7 +121,7 @@ def transactions_simple_section(username):
     st.error(f":warning: You've spent ${abs(diff):.2f} over your monthly average.")
 
 
-# --- PAGE LOGIC ---
+#Page logic for main dashboard page 
 if not st.session_state["logged_in"]:
     login_page()
 else:
